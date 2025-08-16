@@ -20,6 +20,7 @@ export default function SignUpForm() {
       setError(error.message);
     } else {
       setSuccess(true);
+      console.log('Sign up successful:', data);
     }
   };
 

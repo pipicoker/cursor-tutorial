@@ -10,7 +10,8 @@ export async function POST() {
     }
 
     return NextResponse.json({ message: 'Signed out successfully' });
-  } catch (error) {
-    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+  } catch (err) {
+    const error = err as Error;
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

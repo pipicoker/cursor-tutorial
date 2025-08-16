@@ -2,15 +2,9 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-type RouteParams = {
-  params: {
-    id: string;
-  };
-};
-
 export async function GET(
   req: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   const cookieStore = cookies();
   const supabase = createServerClient(
@@ -47,7 +41,7 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   const cookieStore = cookies();
   const supabase = createServerClient(
@@ -87,7 +81,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   const cookieStore = cookies();
   const supabase = createServerClient(

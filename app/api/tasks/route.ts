@@ -2,14 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-interface RouteContext {
-  params: { id: string };
-}
-
-// ---------------- GET ----------------
-export async function GET(request: NextRequest, context: RouteContext) {
-  const { id } = context.params;
-
+export async function GET() {
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,32 +16,25 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
   );
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { data: task, error } = await supabase
+  const { data: tasks, error } = await supabase
     .from('tasks')
     .select('*')
-    .eq('id', id)
-    .eq('user_id', session.user.id)
-    .single();
+    .eq('user_id', session.user.id);
 
   if (error) {
-    return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ task });
+  return NextResponse.json({ tasks });
 }
 
-// ---------------- PUT ----------------
-export async function PUT(request: NextRequest, context: RouteContext) {
-  const { id } = context.params;
-
+export async function POST(req: NextRequest) {
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -62,65 +48,23 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     }
   );
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { title, description, status } = await request.json();
+  const { title, description } = await req.json();
 
   const { data: task, error } = await supabase
     .from('tasks')
-    .update({ title, description, status })
-    .eq('id', id)
-    .eq('user_id', session.user.id)
+    .insert([{ title, description, user_id: session.user.id }])
     .select()
     .single();
 
   if (error) {
-    return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   return NextResponse.json({ task });
-}
-
-// ---------------- DELETE ----------------
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  const { id } = context.params;
-
-  const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { error } = await supabase
-    .from('tasks')
-    .delete()
-    .eq('id', id)
-    .eq('user_id', session.user.id);
-
-  if (error) {
-    return NextResponse.json({ error: 'Task not found' }, { status: 404 });
-  }
-
-  return NextResponse.json({ message: 'Task deleted successfully' });
 }

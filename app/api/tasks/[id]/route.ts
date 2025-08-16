@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
-
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,8 +8,11 @@ type Props = {
   };
 };
 
-export async function GET(request: NextRequest, context: Props) {
-  const { params } = context;
+export async function GET(
+  request: NextRequest,
+  context: Promise<{ params: { id: string } }>
+) {
+  const { params } = await context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,8 +46,11 @@ export async function GET(request: NextRequest, context: Props) {
   return NextResponse.json({ task });
 }
 
-export async function PUT(request: NextRequest, context: Props) {
-  const { params } = context;
+export async function PUT(
+  request: NextRequest,
+  context: Promise<{ params: { id: string } }>
+) {
+  const { params } = await context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -84,8 +87,11 @@ export async function PUT(request: NextRequest, context: Props) {
   return NextResponse.json({ task });
 }
 
-export async function DELETE(request: NextRequest, context: Props) {
-  const { params } = context;
+export async function DELETE(
+  request: NextRequest,
+  context: Promise<{ params: { id: string } }>
+) {
+  const { params } = await context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

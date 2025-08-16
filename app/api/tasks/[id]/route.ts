@@ -8,49 +8,43 @@ type Props = {
   };
 };
 
-// export async function GET(
-//   request: NextRequest,
-//   context: Promise<{ params: { id: string } }>
-// ) {
-//   const { params } = await context;
-//   const cookieStore = cookies();
-//   const supabase = createServerClient(
-//     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-//     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-//     {
-//       cookies: {
-//         get(name: string) {
-//           return cookieStore.get(name)?.value;
-//         },
-//       },
-//     }
-//   );
+export async function GET(request: NextRequest, context: Props) {
+  const { params } = context;
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
 
-//   const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabase.auth.getSession();
 
-//   if (!session) {
-//     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-//   }
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-//   const { data: task, error } = await supabase
-//     .from('tasks')
-//     .select('*')
-//     .eq('id', params.id)
-//     .eq('user_id', session.user.id)
-//     .single();
+  const { data: task, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('id', params.id)
+    .eq('user_id', session.user.id)
+    .single();
 
-//   if (error) {
-//     return NextResponse.json({ error: 'Task not found' }, { status: 404 });
-//   }
+  if (error) {
+    return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+  }
 
-//   return NextResponse.json({ task });
-// }
+  return NextResponse.json({ task });
+}
 
-export async function PUT(
-  request: NextRequest,
-  context: Promise<{ params: { id: string } }>
-) {
-  const { params } = await context;
+export async function PUT(request: NextRequest, context: Props) {
+  const { params } = context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -87,11 +81,8 @@ export async function PUT(
   return NextResponse.json({ task });
 }
 
-export async function DELETE(
-  request: NextRequest,
-  context: Promise<{ params: { id: string } }>
-) {
-  const { params } = await context;
+export async function DELETE(request: NextRequest, context: Props) {
+  const { params } = context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

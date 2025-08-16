@@ -2,14 +2,10 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-export async function GET(request: NextRequest, context: Props) {
-  const { params } = context;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,7 +19,9 @@ export async function GET(request: NextRequest, context: Props) {
     }
   );
 
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -43,8 +41,10 @@ export async function GET(request: NextRequest, context: Props) {
   return NextResponse.json({ task });
 }
 
-export async function PUT(request: NextRequest, context: Props) {
-  const { params } = context;
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -58,7 +58,9 @@ export async function PUT(request: NextRequest, context: Props) {
     }
   );
 
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -81,8 +83,10 @@ export async function PUT(request: NextRequest, context: Props) {
   return NextResponse.json({ task });
 }
 
-export async function DELETE(request: NextRequest, context: Props) {
-  const { params } = context;
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -96,7 +100,9 @@ export async function DELETE(request: NextRequest, context: Props) {
     }
   );
 
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

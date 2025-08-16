@@ -2,15 +2,15 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-interface RouteContext {
-  params: { id: string };
-}
-
 // ---------------- GET ----------------
-export async function GET(request: NextRequest, context: RouteContext) {
-  const { id } = context.params;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies(); // 👈 FIXED
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -46,10 +46,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
 }
 
 // ---------------- PUT ----------------
-export async function PUT(request: NextRequest, context: RouteContext) {
-  const { id } = context.params;
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies(); // 👈 FIXED
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -88,10 +92,14 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 }
 
 // ---------------- DELETE ----------------
-export async function DELETE(request: NextRequest, context: RouteContext) {
-  const { id } = context.params;
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies(); // 👈 FIXED
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

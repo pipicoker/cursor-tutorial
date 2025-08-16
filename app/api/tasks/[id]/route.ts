@@ -1,3 +1,4 @@
+/*
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -112,3 +113,4 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
   return NextResponse.json({ message: 'Task deleted successfully' });
 }
+*/

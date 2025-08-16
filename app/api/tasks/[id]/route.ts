@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const cookieStore = cookies();
@@ -40,7 +40,7 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const cookieStore = cookies();
@@ -62,7 +62,7 @@ export async function PUT(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { title, description, status } = await req.json();
+  const { title, description, status } = await request.json();
 
   const { data: task, error } = await supabase
     .from('tasks')
@@ -80,7 +80,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const cookieStore = cookies();

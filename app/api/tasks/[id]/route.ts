@@ -10,8 +10,9 @@ type Props = {
 
 export async function GET(
   request: NextRequest,
-  { params }: Props
+  context: Promise<{ params: { id: string } }>
 ) {
+  const { params } = await context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,8 +48,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: Props
+  context: Promise<{ params: { id: string } }>
 ) {
+  const { params } = await context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -87,8 +89,9 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: Props
+  context: Promise<{ params: { id: string } }>
 ) {
+  const { params } = await context;
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
